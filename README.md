@@ -8,10 +8,10 @@ Examples in this project use scalajs-bundler, which requires npm, yarn, and webp
 TodoMVC
 --
 
-The TodoMVC site implemented in outwatch. Not much is working yet, just run:
+The TodoMVC site implemented in outwatch. So far, just basic component layout is done. Run
 
 ```
 sbt> todomvc/dev
 ```
 
-To load the devserver with autoreloading
+to load the devserver with autoreloading.
