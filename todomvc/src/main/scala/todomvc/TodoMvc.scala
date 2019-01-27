@@ -78,7 +78,12 @@ object TodoMvc {
   def filterSelector(selected: Handler[Selection]): VDomModifier = footer(cls := "footer",
     ul((cls := "filters") ::
       Selection.selections.map { selection =>
-        li(a(selected.filter(_.name == selection.name).as(cls := "selected"), href := selection.url, selection.name, onClick.mapTo(selection) --> selected))
+        li(a(
+          selected.map{ current => if (current == selection) cls := "selected" else cls := ""},
+          href := selection.url,
+          onClick.mapTo(selection) --> selected,
+          selection.name,
+        ))
       } : _*
     ),
     button(cls := "clear-completed", "Clear completed"),
