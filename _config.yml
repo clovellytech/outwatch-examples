@@ -1,6 +1,6 @@
-name: todo-mvc
+name: Outwatch Examples
 baseurl: ''
-description: todo-mvc
+description: A collection of examples demonstrating the outwatch scala.js virtual dom library
 highlighter: rouge
 docs: true
 collections:
