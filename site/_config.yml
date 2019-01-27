@@ -1,0 +1,11 @@
+name: todo-mvc
+baseurl: ''
+description: todo-mvc
+highlighter: rouge
+docs: true
+collections:
+  tut:
+    output: true
+version: 0.0.1
+org: com.clovellytech
+markdown: kramdown
