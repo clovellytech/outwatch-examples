@@ -110,6 +110,7 @@ object TodoMvc {
       val incomplete = todos.count(!_.completed)
       span(cls := "todo-count", incomplete, if (incomplete == 1) " item left" else " items left")
     },
-    filterSelector(selected)
+    filterSelector(selected),
+    infoFooter,
   )
 }
