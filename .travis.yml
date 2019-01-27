@@ -22,8 +22,8 @@ jobs:
         - sbt docs/makeMicrosite
         - mkdir -p ex-docs/site
         - mkdir -p ex-docs/todomvc
-        - cp -R ex-docs/target/site ./ex-docs/
-        - cp -R todomvc/assets/ ./ex-docs/todomvc
+        - cp -R ex-docs/target/site/* ./ex-docs/
+        - cp -R todomvc/assets/* ./ex-docs/todomvc
         - cp todomvc/target/scala-2.12/scalajs-bundler/main/outwatch-examples-todomvc-opt* ./ex-docs/todomvc/
 
 deploy:
@@ -31,7 +31,7 @@ deploy:
   skip-cleanup: true
   github-token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
   keep-history: true
-  on:
-    branch: master
   local-dir: ex-docs
   target-branch: gh-pages
+  on:
+    branch: master
