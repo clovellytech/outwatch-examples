@@ -13,4 +13,4 @@ A brief look at outwatch
 import outwatch.dom._, dsl._
 ```
 
-[Todomvc-demo](https://github.io/clovellytech/outwatch-examples/todomvc)
+[Todomvc-demo](https://clovellytech.github.io/outwatch-examples/todomvc/)
