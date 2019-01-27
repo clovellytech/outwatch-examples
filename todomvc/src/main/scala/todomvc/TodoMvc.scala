@@ -31,7 +31,7 @@ object TodoMvc {
       placeholder := "What needs to be done?",
       autoFocus,
       value <-- text,
-      onInput.target.value --> text,
+      onChange.target.value --> text,
       text zip todoHandler map { case (title, (nextId, todos)) =>
         onEnterUp.map(_ => (nextId + 1, TodoItem(nextId, title, false) :: todos)) --> todoHandler
       }
@@ -62,7 +62,7 @@ object TodoMvc {
     )
   }
 
-  def todoList(todosHandler: Handler[(Int, List[TodoItem])]): VDomModifier = ul(
+  def todoList(todosHandler: Handler[(Int, List[TodoItem])]): VDomModifier = ul(cls := "todo-list",
     todosHandler.map{ case (_, todos) =>
       todos.map{ case todo =>
         val itemWriter : Observable[TodoItem] => Observable[(Int, List[TodoItem])] =
