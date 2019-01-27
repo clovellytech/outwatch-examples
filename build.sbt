@@ -9,7 +9,7 @@ val commonSettings = Seq(
   resolvers ++= addResolvers,
   scalacOptions ++= options.scalac,
   scalacOptions in (Compile, console) := options.scalacConsole,
-  homepage := "https://clovellytech.github.io/outwatch-examples/index.html"
+  homepage := Some(url("https://clovellytech.github.io/outwatch-examples/index.html"))
 ) ++ compilerPlugins
 
 lazy val docs = (project in file("./ex-docs"))
@@ -17,7 +17,7 @@ lazy val docs = (project in file("./ex-docs"))
     name := "outwatch-examples",
     description := "A collection of examples demonstrating the outwatch scala.js virtual dom library",
     organizationName := "com.clovellytech",
-    organizationHomepage := "github.com/clovellytech",
+    organizationHomepage := Some(url("https://github.com/clovellytech")),
     micrositeName := "Outwatch Examples",
   )
   .settings(commonSettings)
