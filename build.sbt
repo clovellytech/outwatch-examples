@@ -9,10 +9,17 @@ val commonSettings = Seq(
   resolvers ++= addResolvers,
   scalacOptions ++= options.scalac,
   scalacOptions in (Compile, console) := options.scalacConsole,
+  homepage := "https://clovellytech.github.io/outwatch-examples/index.html"
 ) ++ compilerPlugins
 
 lazy val docs = (project in file("./ex-docs"))
-  .settings(name := "todo-mvc")
+  .settings(
+    name := "outwatch-examples",
+    description := "A collection of examples demonstrating the outwatch scala.js virtual dom library",
+    organizationName := "com.clovellytech",
+    organizationHomepage := "github.com/clovellytech",
+    micrositeName := "Outwatch Examples",
+  )
   .settings(commonSettings)
   .enablePlugins(MdocPlugin)
   .enablePlugins(MicrositesPlugin)

@@ -17,21 +17,22 @@ jobs:
     - stage: verify
 
       script:
-        - sbt ++$TRAVIS_SCALA_VERSION todomvc/fullOptJS
+        - sbt ++$TRAVIS_SCALA_VERSION todomvc/fullOptJS::webpack
         - sbt docs/mdoc
         - sbt docs/makeMicrosite
-        - mkdir -p ex-docs/site
-        - mkdir -p ex-docs/todomvc
-        - cp -R ex-docs/target/site/* ./ex-docs/
-        - cp -R todomvc/assets/* ./ex-docs/todomvc
-        - cp todomvc/target/scala-2.12/scalajs-bundler/main/outwatch-examples-todomvc-opt* ./ex-docs/todomvc/
+        - mkdir -p ex-docs/site/todomvc
+        - cp -R ex-docs/target/site/* ./ex-docs/site/
+        - cp ./ex-docs/site/Readme.html ./ex-docs/site/index.html
+        - cp -R todomvc/assets/* ./ex-docs/site/todomvc
+        - cp todomvc/target/scala-2.12/scalajs-bundler/main/outwatch-examples-todomvc-opt* ./ex-docs/site/todomvc/
 
 deploy:
   provider: pages
   skip-cleanup: true
   github-token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
   keep-history: true
-  local-dir: ex-docs
+  local-dir: ex-docs/site
   target-branch: gh-pages
   on:
-    branch: master
+    branch: fix-doc-deploy
+  
