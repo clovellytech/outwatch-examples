@@ -34,5 +34,5 @@ deploy:
   local-dir: ex-docs/site
   target-branch: gh-pages
   on:
-    branch: fix-doc-deploy
+    branch: master
   
