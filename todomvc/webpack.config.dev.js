@@ -10,6 +10,7 @@ module.exports.devServer = {
            Path.resolve(rootDir, 'assets') // project root containing index.html
     ],
     historyApiFallback: true,
+    index: 'index-dev.html',
     watchContentBase: true,
     hot: false,
     hotOnly: false, // only reload when build is successful

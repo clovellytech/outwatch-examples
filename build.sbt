@@ -11,14 +11,19 @@ val commonSettings = Seq(
   scalacOptions in (Compile, console) := options.scalacConsole,
 ) ++ compilerPlugins
 
-lazy val docs = (project in file("./docs"))
+lazy val docs = (project in file("./ex-docs"))
   .settings(name := "todo-mvc")
   .settings(commonSettings)
   .enablePlugins(MdocPlugin)
+  .enablePlugins(MicrositesPlugin)
   .settings(
     mdocVariables := Map(
     "VERSION" -> version.value
   ))
+  .settings(
+    micrositeCompilingDocsTool := WithMdoc,
+    scalacOptions := options.scalacConsole
+  )
   .dependsOn(todomvc)
 
 lazy val copyFastOptJS = TaskKey[Unit]("copyFastOptJS", "Copy javascript files to target directory")
