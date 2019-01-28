@@ -26,14 +26,14 @@ object TodoMvc {
   def replaceTodo(id: Int, todo: TodoItem, todos: List[TodoItem]): List[TodoItem] =
     (todo :: todos.filterNot(_.id == id)).sortBy(_.id)
 
-  def addTodo(todoHandler: Handler[(Int, List[TodoItem])]): IO[VNode] = Handler.create[String]("").map { text =>
+  def addTodo(todoHandler: Handler[(Int, List[TodoItem])]): VNode = {
     input(cls := "new-todo",
       placeholder := "What needs to be done?",
       autoFocus,
-      value <-- text,
-      onChange.target.value --> text,
-      text zip todoHandler map { case (title, (nextId, todos)) =>
-        onEnterUp.map(_ => (nextId + 1, TodoItem(nextId, title, false) :: todos)) --> todoHandler
+      todoHandler map { case (nextId, todos) =>
+        onEnterUp.target.value.map{ title =>
+          (nextId + 1, TodoItem(nextId, title, false) :: todos)
+        } --> todoHandler
       }
     )
   }
