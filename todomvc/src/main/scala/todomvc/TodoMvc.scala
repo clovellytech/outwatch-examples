@@ -1,121 +1,82 @@
 package todomvc
 
+import AppState._
+import Action._
 import cats.effect.IO
 import cats.implicits._
-import outwatch.dom._
-import dsl._
-import monix.reactive.Observable
+import outwatch.dom._, dsl._
+import monix.execution.Scheduler
 
-final case class TodoItem(id: Int, title: String, completed: Boolean)
+final case class TodoMvc() {
 
-sealed abstract class Selection(val name: String) extends Product with Serializable{
-  def url: String = s"#/$name"
-}
-
-object Selection{
-  case object All extends Selection("all")
-  case object Active extends Selection("active")
-  case object Completed extends Selection("completed")
-  def selections: List[Selection] = All :: Active :: Completed :: Nil
-}
-
-object TodoMvc {
   val enter: Int = 13
   val onEnterUp = onKeyUp.transform(_.filter(_.keyCode == enter))
 
-  def replaceTodo(id: Int, todo: TodoItem, todos: List[TodoItem]): List[TodoItem] =
-    (todo :: todos.filterNot(_.id == id)).sortBy(_.id)
-
-  def addTodo(todoHandler: Handler[(Int, List[TodoItem])]): VNode = {
+  def addTodo()(implicit store: AppStore): BasicVNode =
     input(cls := "new-todo",
       placeholder := "What needs to be done?",
       autoFocus,
-      todoHandler map { case (nextId, todos) =>
-        onEnterUp.target.value.map{ title =>
-          (nextId + 1, TodoItem(nextId, title, false) :: todos)
-        } --> todoHandler
-      }
+      value <-- store.map(_.text),
+      onInput.target.value.map(UpdateText) --> store,
+      onEnterUp.mapTo(AddTodo) --> store
     )
-  }
 
-  def todoItem(item: Handler[TodoItem]): IO[VNode] = Handler.create[Boolean](false) map { editing =>
-    val titleHandler = item.transformHandler[String](_.flatMap(x => item.map(_.copy(title = x))))(_.map(_.title))
-    li(
-      editing.map {
-        case false =>
-          div(cls := "view",
-            input(cls := "toggle", tpe := "checkbox"),
-            titleHandler.map(label(_)),
-            onDblClick.mapTo(true) --> editing
-          )
-        case true =>
-          div(cls := "edit",
+
+  def todoList()(implicit store: AppStore) =
+    store.map(state =>
+      state.todos.sortBy(-_.id).filter(state.selection.pred)
+    )
+    .map { todos =>
+      ul((cls := "todo-list") ::
+        todos.map { todo =>
+          li(
             input(
-              autoFocus,
-              value <-- titleHandler,
-              onInput.target.value --> titleHandler,
-              onEnterUp.mapTo(false) --> editing,
-              onBlur.mapTo(false) --> editing
+              cls := "toggle",
+              tpe := "checkbox",
+              checked := todo.completed,
+              onInput.map(_ => ToggleTodo(todo.id)) --> store
             ),
+            label(todo.title)
           )
-      },
-    )
+        }: _*
+      )
   }
 
-  def todoList(todosHandler: Handler[(Int, List[TodoItem])]): VDomModifier = ul(cls := "todo-list",
-    todosHandler.map{ case (_, todos) =>
-      todos.map{ case todo =>
-        val itemWriter : Observable[TodoItem] => Observable[(Int, List[TodoItem])] =
-          _.flatMap(newItem => todosHandler.map{ case (id, todos) => (id, replaceTodo(todo.id, newItem, todos))})
-        val itemReader : Observable[(Int, List[TodoItem])] => Observable[TodoItem] =
-          _.map(_ => todo)  // probably wrong...
-        val itemHandler = todosHandler.transformHandler[TodoItem](itemWriter)(itemReader)
-        todoItem(itemHandler)
-      }
-    }
-  )
+  private def pluralize(num: Int, singular: String, plural: String): String =
+    s"$num ${if(num == 1) singular else plural}"
 
-  def filterSelector(selected: Handler[Selection]): VDomModifier = footer(cls := "footer",
+  def filterSelector()(implicit store : AppStore): VNode = footer(cls := "footer",
+    span(cls := "todo-count",
+      store.map(_.todos.count(!_.completed)).map(pluralize(_, "item left", "items left"))
+    ),
     ul((cls := "filters") ::
       Selection.selections.map { selection =>
         li(a(
-          selected.map{ current => if (current == selection) cls := "selected" else cls := ""},
           href := selection.url,
-          onClick.mapTo(selection) --> selected,
           selection.name,
+          store.map(state => if (state.selection == selection) cls := "selected" else cls := ""),
+          onClick.map(_ => UpdateFilter(selection)) --> store
         ))
       } : _*
     ),
-    button(cls := "clear-completed", "Clear completed"),
+    button(cls := "clear-completed", "Clear completed", onClick.map(_ => Drop(_.completed)) --> store)
   )
 
-  val infoFooter: VNode = footer(
-    cls := "info",
-    p("Double-click to edit a todo"),
-    p(a(href := "http://www.github.com/outwatch/outwatch", "Written in Scala with Outwatch")),
-    p("Implements", a(href := "http://todomvc.com/", "TodoMVC")),
-  )
 
-  def apply() : IO[VNode] = for {
-    items <- Handler.create[(Int, List[TodoItem])]((0, Nil))
-    selected <- Handler.create[Selection](Selection.All)
-  } yield div(cls := "todoapp",
-    div(cls := "header",
-      h1("todos"),
-      addTodo(items),
-      todoList(items)
-    ),
-    div(cls := "main",
-      button(tpe := "button",
-        items.map{ case (id, todos) => onClick.map(_ => (id, todos.map(_.copy(completed = true)))) --> items},
-        "Mark all as complete"
-      )
-    ),
-    items.map { case (_, todos) =>
-      val incomplete = todos.count(!_.completed)
-      span(cls := "todo-count", incomplete, if (incomplete == 1) " item left" else " items left")
-    },
-    filterSelector(selected),
-    infoFooter,
-  )
+  def render()(implicit S: Scheduler) : IO[VNode] = appStore map { implicit store =>
+    div(cls := "todoapp",
+      div(cls := "header",
+        h1("todos"),
+        addTodo(),
+        todoList()
+      ),
+      div(cls := "main",
+        button(tpe := "button",
+          "Mark all as complete",
+          onClick.map(_ => AllComplete) --> store,
+        )
+      ),
+      filterSelector(),
+    )
+  }
 }
