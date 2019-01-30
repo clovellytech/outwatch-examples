@@ -29,13 +29,18 @@ object Action{
   case object AllComplete extends Action
   case class Drop(pred: TodoItem => Boolean) extends Action
   case class UpdateFilter(selection: Selection) extends Action
+  case class EditTodo(id: Int) extends Action
+  case class EditText(text: String) extends Action
+  case object SaveEdit extends Action
 }
 
 final case class AppState(
   nextId: Int,
   todos: List[TodoItem],
   text: String,
-  selection: Selection
+  selection: Selection,
+  editingId: Option[Int],
+  editText: String,
 )
 
 object AppState {
@@ -62,6 +67,17 @@ object AppState {
     case AllComplete => state.copy(todos = state.todos.map(_.copy(completed = true)))
     case Drop(pred) => state.copy(todos = state.todos.filterNot(pred))
     case UpdateFilter(selection: Selection) => state.copy(selection = selection)
+    case EditTodo(id: Int) => state.copy(
+      editingId = Some(id),
+      editText = state.todos.find(_.id == id).map(_.title).getOrElse(""),
+    )
+    case EditText(text: String) => state.copy(editText = text)
+    case SaveEdit => state.editingId.map(id =>
+      updateById(id, state)(_.copy(title = state.editText)).copy(
+        editingId = None,
+        editText = ""
+      )
+    ).getOrElse(state)
   }
 
   type AppStore = ProHandler[Action, AppState]
@@ -70,5 +86,5 @@ object AppState {
   val AppReducer = Store.Reducer
   def appReducer : AppReducer = AppReducer.justState(reducer _)
   def appStore(implicit S: Scheduler): IO[AppStore] =
-    Store.create(AppState(0, Nil, "", Selection.All), appReducer)
+    Store.create(AppState(0, Nil, "", Selection.All, None, ""), appReducer)
 }
