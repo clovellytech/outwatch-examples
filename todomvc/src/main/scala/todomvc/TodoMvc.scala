@@ -8,7 +8,6 @@ import outwatch.dom._, dsl._
 import monix.execution.Scheduler
 
 final case class TodoMvc() {
-
   val enter: Int = 13
   val onEnterUp = onKeyUp.transform(_.filter(_.keyCode == enter))
 
@@ -18,9 +17,8 @@ final case class TodoMvc() {
       autoFocus,
       value <-- store.map(_.text),
       onInput.target.value.map(UpdateText) --> store,
-      onEnterUp.mapTo(AddTodo) --> store
+      onEnterUp.mapTo(AddTodo) --> store,
     )
-
 
   def todoList()(implicit store: AppStore) =
     store.map { state =>
@@ -56,7 +54,7 @@ final case class TodoMvc() {
 
   def filterSelector()(implicit store : AppStore): VNode = footer(cls := "footer",
     span(cls := "todo-count",
-      store.map(_.todos.count(!_.completed)).map(pluralize(_, "item left", "items left"))
+      store.map(_.todos.count(!_.completed)).map(pluralize(_, "item left", "items left")),
     ),
     ul((cls := "filters") ::
       Selection.selections.map { selection =>
@@ -64,26 +62,25 @@ final case class TodoMvc() {
           href := selection.url,
           selection.name,
           store.map(state => if (state.selection == selection) cls := "selected" else cls := ""),
-          onClick.map(_ => UpdateFilter(selection)) --> store
+          onClick.map(_ => UpdateFilter(selection)) --> store,
         ))
       } : _*
     ),
-    button(cls := "clear-completed", "Clear completed", onClick.map(_ => Drop(_.completed)) --> store)
+    button(cls := "clear-completed", "Clear completed", onClick.map(_ => Drop(_.completed)) --> store),
   )
-
 
   def render()(implicit S: Scheduler) : IO[VNode] = appStore map { implicit store =>
     div(cls := "todoapp",
       div(cls := "header",
         h1("todos"),
         addTodo(),
-        todoList()
+        todoList(),
       ),
       div(cls := "main",
         button(tpe := "button",
           "Mark all as complete",
           onClick.map(_ => AllComplete) --> store,
-        )
+        ),
       ),
       filterSelector(),
     )
