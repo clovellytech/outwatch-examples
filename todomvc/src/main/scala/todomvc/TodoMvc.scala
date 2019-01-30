@@ -23,21 +23,30 @@ final case class TodoMvc() {
 
 
   def todoList()(implicit store: AppStore) =
-    store.map(state =>
-      state.todos.sortBy(-_.id).filter(state.selection.pred)
-    )
-    .map { todos =>
+    store.map { state =>
+      val todos = state.todos.sortBy(-_.id).filter(state.selection.pred)
       ul((cls := "todo-list") ::
         todos.map { todo =>
-          li(
-            input(
-              cls := "toggle",
-              tpe := "checkbox",
-              checked := todo.completed,
-              onInput.map(_ => ToggleTodo(todo.id)) --> store
-            ),
-            label(todo.title)
-          )
+          state.editingId.filter(_ == todo.id).map { _ =>
+            input(cls := "edit",
+              defaultValue := todo.title,
+              onInput.target.value.map(EditText) --> store,
+              onEnterUp.mapTo(SaveEdit) --> store,
+              onBlur.mapTo(SaveEdit) --> store,
+              autoFocus,
+            )
+          }.getOrElse {
+            li(
+              input(
+                cls := "toggle",
+                tpe := "checkbox",
+                checked := todo.completed,
+                onInput.map(_ => ToggleTodo(todo.id)) --> store,
+              ),
+              label(todo.title),
+              onDblClick.mapTo(EditTodo(todo.id)) --> store,
+            )
+          }
         }: _*
       )
   }
