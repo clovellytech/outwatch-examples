@@ -9,9 +9,7 @@ module.exports.devServer = {
            Path.resolve(__dirname, 'dev'), // fastOptJS output
            Path.resolve(rootDir, 'assets') // project root containing index.html
     ],
-    historyApiFallback: {rewrites: [
-        {from: /^$/, to: '/index-dev.html' },
-        {from: /./, to: '/index-dev.html' }]},
+    historyApiFallback: true,
     index: 'index-dev.html',
     watchContentBase: true,
     hot: false,
