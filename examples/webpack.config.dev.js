@@ -7,7 +7,7 @@ const rootDir = Path.resolve(__dirname, '../../../..');
 module.exports.devServer = {
     contentBase: [
            Path.resolve(__dirname, 'dev'), // fastOptJS output
-           Path.resolve(rootDir, 'assets'), // project root containing index.html
+           Path.resolve(rootDir, 'assets'),
            Path.resolve(rootDir, '../todomvc/assets')
     ],
     historyApiFallback: true,

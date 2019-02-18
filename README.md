@@ -11,7 +11,7 @@ TodoMVC
 The TodoMVC site implemented in outwatch. Run
 
 ```
-sbt> todomvc/dev
+sbt> outwatch-examples-directory/dev
 ```
 
 to load the devserver with autoreloading.

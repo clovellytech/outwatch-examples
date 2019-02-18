@@ -32,6 +32,7 @@ object Action{
   case class EditTodo(id: Int) extends Action
   case class EditText(text: String) extends Action
   case object SaveEdit extends Action
+  case object Init extends Action
 }
 
 final case class AppState(
@@ -78,13 +79,14 @@ object AppState {
         editText = ""
       )
     ).getOrElse(state)
+    case Init => state
   }
 
-  type AppStore = ProHandler[Action, AppState]
+  type AppStore = ProHandler[Action, (Action, AppState)]
   type SubStore[A] = ProHandler[Action, A]
-  type AppReducer = Store.Reducer[AppState, Action]
+  type AppReducer = Store.Reducer[Action, AppState]
   val AppReducer = Store.Reducer
   def appReducer : AppReducer = AppReducer.justState(reducer _)
   def appStore(implicit S: Scheduler): IO[AppStore] =
-    Store.create(AppState(0, Nil, "", Selection.All, None, ""), appReducer)
+    Store.create(Init, AppState(0, Nil, "", Selection.All, None, ""), appReducer)
 }
