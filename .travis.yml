@@ -8,6 +8,8 @@ install:
   - gem update --system
   - gem install sass
   - gem install jekyll -v 3.2.1
+  - gem install therubyracer
+  - gem install less
 
 scala:
    - 2.12.8
@@ -17,14 +19,16 @@ jobs:
     - stage: verify
 
       script:
-        - sbt ++$TRAVIS_SCALA_VERSION todomvc/fullOptJS::webpack
+        - cd examples && npm install && cd ..
+        - sbt ++$TRAVIS_SCALA_VERSION outwatch-examples-directory/fullOptJS::webpack
         - sbt docs/mdoc
         - sbt docs/makeMicrosite
-        - mkdir -p ex-docs/site/todomvc
+        - mkdir -p ex-docs/site/directory
         - cp -R ex-docs/target/site/* ./ex-docs/site/
         - cp ./ex-docs/site/Readme.html ./ex-docs/site/index.html
-        - cp -R todomvc/assets/* ./ex-docs/site/todomvc
-        - cp todomvc/target/scala-2.12/scalajs-bundler/main/outwatch-examples-todomvc-opt* ./ex-docs/site/todomvc/
+        - lessc todomvc/assets/todomvc/main.less > ./ex-docs/site/directory/todomvc.css
+        - cp -R examples/assets/* ./ex-docs/site/directory
+        - cp examples/target/scala-2.12/scalajs-bundler/main/outwatch-examples-directory-opt* ./ex-docs/site/directory/
 
 deploy:
   provider: pages
@@ -34,5 +38,4 @@ deploy:
   local-dir: ex-docs/site
   target-branch: gh-pages
   on:
-    branch: master
-  
+    branch: master  

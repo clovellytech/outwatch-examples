@@ -9,10 +9,10 @@ Outwatch-examples
 
 A brief look at outwatch
 
-```scala mdoc
+```scala mdoc:js
 
 import outwatch.dom._, dsl._
 
 ```
 
-[Todomvc-demo](https://clovellytech.github.io/outwatch-examples/todomvc/)
+[View examples](https://clovellytech.github.io/outwatch-examples/directory/)

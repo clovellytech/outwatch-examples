@@ -15,13 +15,13 @@ final case class TodoMvc() {
     input(cls := "new-todo",
       placeholder := "What needs to be done?",
       autoFocus,
-      value <-- store.map(_.text),
+      value <-- store.map(_._2.text),
       onInput.target.value.map(UpdateText) --> store,
       onEnterUp.mapTo(AddTodo) --> store,
     )
 
-  def todoList()(implicit store: AppStore) =
-    store.map { state =>
+  def todoList()(implicit store: AppStore) = {
+    store.map { case (_, state) =>
       val todos = state.todos.sortBy(-_.id).filter(state.selection.pred)
       ul((cls := "todo-list") ::
         todos.map { todo =>
@@ -47,6 +47,7 @@ final case class TodoMvc() {
           }
         }: _*
       )
+    }
   }
 
   private def pluralize(num: Int, singular: String, plural: String): String =
@@ -54,14 +55,14 @@ final case class TodoMvc() {
 
   def filterSelector()(implicit store : AppStore): VNode = footer(cls := "footer",
     span(cls := "todo-count",
-      store.map(_.todos.count(!_.completed)).map(pluralize(_, "item left", "items left")),
+      store.map(_._2.todos.count(!_.completed)).map(pluralize(_, "item left", "items left")),
     ),
     ul((cls := "filters") ::
       Selection.selections.map { selection =>
         li(a(
           href := selection.url,
           selection.name,
-          store.map(state => if (state.selection == selection) cls := "selected" else cls := ""),
+          store.map{ case (_, state) => if (state.selection == selection) cls := "selected" else cls := "" },
           onClick.map(_ => UpdateFilter(selection)) --> store,
         ))
       } : _*
