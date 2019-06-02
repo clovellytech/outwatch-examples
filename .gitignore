@@ -149,6 +149,5 @@ GitHub.sublime-settings
 examples/assets/semantic/
 examples/semantic/
 yarn.lock
-package-lock.json
 node_modules
 /todomvc/assets/todomvc/main.css
