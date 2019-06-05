@@ -3,9 +3,7 @@ Outwatch Examples [![Join the chat][gitter-badge]][gitter-url] [![Build Status][
 
 Prerequisites
 ---
-Examples in this project use scalajs-bundler, which requires npm, yarn, and webpack working locally.
-
-Due to [this issue](https://github.com/Semantic-Org/Semantic-UI/issues/6818) in semantic-ui, you must be running a Nodejs v10.
+Examples in this project use scalajs-bundler, which requires npm, yarn, and webpack working locally. Tested and working with latest node v12.
 
 TodoMVC and a simple Login/Register authentication form is implemented. Needs some improvement. [You can view the documentation and examples here](https://clovellytech.github.io/outwatch-examples/). 
 
@@ -20,6 +18,8 @@ sbt> dev
 ```
 
 to load the devserver with autoreloading.
+
+Point your browser to http://localhost:8080/index-dev.html
 
 [gitter-badge]: https://badges.gitter.im/clovellytech/outwatch-examples.svg
 [gitter-url]: https://gitter.im/clovellytech/outwatch-examples
