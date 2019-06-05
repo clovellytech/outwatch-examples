@@ -1,4 +1,4 @@
-Outwatch Examples
+Outwatch Examples [![Join the chat][gitter-badge]][gitter-url] [![Build Status][travis-badge]][travis-url]
 ===
 
 Prerequisites
@@ -20,3 +20,8 @@ sbt> dev
 ```
 
 to load the devserver with autoreloading.
+
+[gitter-badge]: https://badges.gitter.im/clovellytech/outwatch-examples.svg
+[gitter-url]: https://gitter.im/clovellytech/outwatch-examples
+[travis-badge]: https://travis-ci.com/clovellytech/outwatch-examples.svg?branch=master
+[travis-url]: https://travis-ci.com/clovellytech/outwatch-examples
