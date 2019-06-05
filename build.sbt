@@ -18,8 +18,8 @@ val depSettings = Seq(
   libraryDependencies ++= Seq(
     "io.github.outwatch" % "outwatch" % versions.outwatch,
     "org.scalatest" %%% "scalatest" % versions.scalaTest % Test,
-    "com.clovellytech" %%% "outwatch-router" % "0.0.5",
-    "org.scala-js" %%% "scalajs-dom" % "0.9.6",
+    "com.clovellytech" %%% "outwatch-router" % "0.0.6",
+    "org.scala-js" %%% "scalajs-dom" % "0.9.7",
   ) ++ Seq(
     "circe-core",
     "circe-generic",
@@ -34,8 +34,8 @@ val scalaJsSettings = Seq(
   jsEnv in Test := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv,
   scalaJSUseMainModuleInitializer := true,
   scalaJSModuleKind := ModuleKind.CommonJSModule, // configure Scala.js to emit a JavaScript module instead of a top-level script
-  version in webpack := "4.16.1",
-  version in startWebpackDevServer := "3.1.4",
+  version in webpack := "4.32.2",
+  version in startWebpackDevServer := "3.5.1",
   webpackDevServerExtraArgs := Seq("--progress", "--color"),
   webpackConfigFile in fastOptJS := Some(baseDirectory.value / "webpack.config.dev.js"),
   // https://scalacenter.github.io/scalajs-bundler/cookbook.html#performance

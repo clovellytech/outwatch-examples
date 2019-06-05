@@ -1,5 +1,5 @@
 language: scala
-
+dist: xenial
 before_install:
   - export PATH=${PATH}:./vendor/bundle
 
@@ -13,7 +13,7 @@ install:
 
 scala:
    - 2.12.8
-   
+
 jobs:
   include:
     - stage: verify
@@ -38,4 +38,4 @@ deploy:
   local-dir: ex-docs/site
   target-branch: gh-pages
   on:
-    branch: master  
+    branch: master

@@ -5,15 +5,14 @@ object dependencies {
     Resolver.sonatypeRepo("releases"),
     "jitpack" at "https://jitpack.io"
   )
-  
+
   val compilerPlugins = Seq(
-    addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.9"),
-    addCompilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.0-M4"),
+    addCompilerPlugin("org.typelevel" %% "kind-projector" % "0.10.2"),
+    addCompilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.0"),
   )
 
   val versions = new {
-    val outwatch = "e0f28a8fbb"
-    val outwatchExtras = "68aa33ac88"
-    val scalaTest = "3.0.5"
+    val outwatch = "676f94a"
+    val scalaTest = "3.0.7"
   }
 }
