@@ -9,9 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "semantic-ui": "^2.4.2"
+    "fomantic-ui": "^2.7.5",
+    "inquirer": "^6.3.1"
   },
   "devDependencies": {
-    "gulp": "^3.9.1"
+    "gulp": "^4.0.2"
   }
 }
