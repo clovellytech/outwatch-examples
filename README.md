@@ -1,5 +1,6 @@
 Outwatch Examples [![Join the chat][gitter-badge]][gitter-url] [![Build Status][travis-badge]][travis-url]
 ===
+Like outwatch? Interested in a project hosting a bunch of instructional examples? Give this project a star for motivation, submit an idea via an issue, or try a PR for a new example. I'd be happy to help work on it with you.
 
 Prerequisites
 ---
