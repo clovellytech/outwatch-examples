@@ -18,7 +18,7 @@ val depSettings = Seq(
   libraryDependencies ++= Seq(
     "io.github.outwatch" % "outwatch" % versions.outwatch,
     "org.scalatest" %%% "scalatest" % versions.scalaTest % Test,
-    "com.clovellytech" %%% "outwatch-router" % "0.0.6",
+    "com.clovellytech" %%% "outwatch-router" % "0.0.7",
     "org.scala-js" %%% "scalajs-dom" % "0.9.7",
   ) ++ Seq(
     "circe-core",
